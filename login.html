@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+</head>
+
+<body width="100%">
+    <script src="src/js/common.js" charset="utf-8"></script>
+
+    <div id='login-pnl' style="border: 1px solid black;width: 100%; text-align: center;">
+        <label for="user-tb">User</label><br />
+        <input id='user-tb' type="text" /><br />
+        <label for='room-cbo'>Sala:</label><br />
+        <select id='room-cbo'>
+            <option value="room-1">room-1</option>
+            <option value="room-2">room-2</option>
+        </select><br /><br />
+        <button id='login-btn' onclick="login()" type="button" value="Login!">Login!</button>
+    </div>
+
+    <script>
+        function login() {
+            let data = {
+                userName: (document.getElementById('user-tb')).value,
+                room: (document.getElementById('room-cbo')).value
+            }           
+            let url = '/login'
+            let headers = { 'Content-Type': 'application/json'};
+            console.log(data);
+            postData(url,data,headers)
+            .then((d)=>{
+                window.location.replace("/");
+                sessionStorage.setItem("user",JSON.stringify(d));
+            });
+
+        }
+
+       
+    </script>
+
+</body>
+
+</html>

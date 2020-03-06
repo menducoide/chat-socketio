@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>chat</title>
+</head>
+
+<body width="100%">
+   
+    <div style="text-align: center;">
+        <div disabled id="chat-pnl" style="border: 1px black solid; height: 500px;width: 800px;">
+        </div>
+        <div id="comment-pnl" style="border: 1px black solid; height: 100px;width: 800px;">
+            <input type="text" id="comment-tb" placeholder="write a comment ..." style="width: 80%;" />
+            <input type="button" id="comment-btn" value="send" style="width: 20%;" />
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+    <script src="src/js/notify.js" charset="utf-8"></script>
+  
+    <script type="text/javascript">
+        var user = JSON.parse(sessionStorage.getItem("user"));
+        console.log(user);
+        var name = user.userName;
+        var room = user.room;
+        var socket = io('/chat', { query: "user=" + name , multiplex:false});
+        
+        document.getElementById('comment-btn').onclick = function () {
+            var message = name + ": " + document.getElementById('comment-tb').value
+            socket.emit('send comment', message);
+            addComment(message);
+        }
+        socket.on('new comment', function (data) {
+            // handler
+            addComment(data)
+        });
+        function addComment(s) {
+            document.getElementById('chat-pnl').innerHTML = document.getElementById('chat-pnl').innerHTML + "<br />" + s;
+        }
+        socket.on('new user has connected', function (data) {
+            var notification = {
+                title: 'Alert!',
+                body: data,
+                icon: ''
+            }
+            notifyMe(notification);
+        });
+    
+    </script>
+</body>
+
+</html>
